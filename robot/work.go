@@ -3,8 +3,11 @@ package robot
 import (
 	"crypto/tls"
 	"crypto/x509"
+	"encoding/json"
 	"fmt"
 	"io/ioutil"
+
+	"github.com/liangdas/armyant/task"
 
 	MQTT "github.com/eclipse/paho.mqtt.golang"
 	"github.com/liangdas/armyant/work"
@@ -42,18 +45,29 @@ func NewWork(maanger *Manager) *Work {
 	}
 	opts.SetTLSConfig(config)
 	err = this.Connect(opts)
-	if err != nil{
+	if err != nil {
 		fmt.Println(err.Error())
 	}
 
 	//接到服務器端的訊息
-	this.On()
+	//this.On()
+	return this
 }
 
-func (this *Work) UnmarshalResult(payload []byte) map[string]interface{}{
-	rmasg := map[string]interface{}
-	json.Unmarshal(payload,&rmasg)
+func (this *Work) UnmarshalResult(payload []byte) map[string]interface{} {
+	rmasg := map[string]interface{}{}
+	json.Unmarshal(payload, &rmasg)
 	return rmasg["Result"].(map[string]interface{})
 }
 
+func (this *Work) Init(t task.Task) {
 
+}
+
+func (this *Work) Close(t task.Task) {
+
+}
+
+func (this *Work) RunWorker(t task.Task) {
+
+}
