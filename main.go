@@ -11,7 +11,7 @@ import (
 
 func main() {
 	task := task.LoopTask{
-		C: 5,
+		C: 1,
 	}
 	manager := robot.NewManager(task)
 	fmt.Println("機器人出動中....")
