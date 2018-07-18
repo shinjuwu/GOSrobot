@@ -3,6 +3,7 @@ package robot
 import (
 	"encoding/json"
 	"fmt"
+	"time"
 )
 
 func (this *Work) Login() {
@@ -13,7 +14,7 @@ func (this *Work) Login() {
 	// 	"platformID":  int //登入平台(1:帳密 2:第三方平台)
 	// 	}
 	data := map[string]interface{}{
-		"token":      "67e59e24e131abcd23f94a8aa33dabd5",
+		"token":      "f94b9e9778d57cc89b294e0e178df7d5",
 		"gameCode":   "ragnarok5x20",
 		"clientType": "web",
 		"platform":   1,
@@ -61,7 +62,9 @@ func (this *Work) Spin() {
 	// >2. BetLines: int  壓注線
 	data := map[string]interface{}{
 		"BetMultiple": 1.8,
-		"BetLines":    12,
+		"BetLines":    20,
+		"NGDramaNo":   -1,
+		"BGDramaNo":   -1,
 	}
 	byteData, err := json.Marshal(data)
 	msg, err := this.Request("Game/HD_Spin", byteData)
@@ -70,4 +73,25 @@ func (this *Work) Spin() {
 		return
 	}
 	fmt.Println(msg.Topic(), string(msg.Payload()))
+	//this.StartSpin()
+}
+
+func (this *Work) StartSpin() {
+	ticker := time.NewTicker(2 * time.Second)
+	for _ = range ticker.C {
+		fmt.Println(time.Now())
+		data := map[string]interface{}{
+			"BetMultiple": 1.8,
+			"BetLines":    20,
+			"NGDramaNo":   -1,
+			"BGDramaNo":   -1,
+		}
+		byteData, err := json.Marshal(data)
+		msg, err := this.Request("Game/HD_Spin", byteData)
+
+		if err != nil {
+			return
+		}
+		fmt.Println(msg.Topic(), string(msg.Payload()))
+	}
 }
