@@ -14,7 +14,7 @@ func (this *Work) Login() {
 	// 	"platformID":  int //登入平台(1:帳密 2:第三方平台)
 	// 	}
 	data := map[string]interface{}{
-		"token":      "f94b9e9778d57cc89b294e0e178df7d5",
+		"token":      "1c746a866935bdd99afc765d6e8f9403",
 		"gameCode":   "ragnarok5x20",
 		"clientType": "web",
 		"platform":   1,
@@ -63,8 +63,6 @@ func (this *Work) Spin() {
 	data := map[string]interface{}{
 		"BetMultiple": 1.8,
 		"BetLines":    20,
-		"NGDramaNo":   -1,
-		"BGDramaNo":   -1,
 	}
 	byteData, err := json.Marshal(data)
 	msg, err := this.Request("Game/HD_Spin", byteData)
@@ -73,7 +71,7 @@ func (this *Work) Spin() {
 		return
 	}
 	fmt.Println(msg.Topic(), string(msg.Payload()))
-	//this.StartSpin()
+	this.StartSpin()
 }
 
 func (this *Work) StartSpin() {
@@ -83,8 +81,6 @@ func (this *Work) StartSpin() {
 		data := map[string]interface{}{
 			"BetMultiple": 1.8,
 			"BetLines":    20,
-			"NGDramaNo":   -1,
-			"BGDramaNo":   -1,
 		}
 		byteData, err := json.Marshal(data)
 		msg, err := this.Request("Game/HD_Spin", byteData)
@@ -94,4 +90,23 @@ func (this *Work) StartSpin() {
 		}
 		fmt.Println(msg.Topic(), string(msg.Payload()))
 	}
+}
+
+func (this *Work) SpinDemo() {
+	// 	>1. BetMultiple  int  壓注倍率
+	// >2. BetLines: int  壓注線
+	data := map[string]interface{}{
+		"BetMultiple": 1.8,
+		"BetLines":    20,
+		"NGDramaNo":   25,
+		"BGDramaNo":   -1,
+	}
+	byteData, err := json.Marshal(data)
+	msg, err := this.Request("Game/HD_SpinDemo", byteData)
+
+	if err != nil {
+		return
+	}
+	fmt.Println(msg.Topic(), string(msg.Payload()))
+	//this.StartSpin()
 }
