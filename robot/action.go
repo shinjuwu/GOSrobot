@@ -64,7 +64,13 @@ func (this *Work) Spin() {
 		"BetMultiple": 1.8,
 		"BetLines":    20,
 	}
-	byteData, err := json.Marshal(data)
+	dataStr, _ := json.Marshal(data)
+	body := map[string]interface{}{
+		"sn":       "",
+		"isEncode": false,
+		"data":     string(dataStr),
+	}
+	byteData, err := json.Marshal(body)
 	msg, err := this.Request("Game/HD_Spin", byteData)
 
 	if err != nil {
@@ -101,7 +107,14 @@ func (this *Work) SpinDemo() {
 		"NGDramaNo":   25,
 		"BGDramaNo":   -1,
 	}
-	byteData, err := json.Marshal(data)
+	dataStr, _ := json.Marshal(data)
+	body := map[string]interface{}{
+		"sn":       "",
+		"isEncode": false,
+		"data":     string(dataStr),
+	}
+
+	byteData, err := json.Marshal(body)
 	msg, err := this.Request("Game/HD_SpinDemo", byteData)
 
 	if err != nil {
