@@ -14,7 +14,7 @@ func (this *Work) Login() {
 	// 	"platformID":  int //登入平台(1:帳密 2:第三方平台)
 	// 	}
 	data := map[string]interface{}{
-		"token":      "1c746a866935bdd99afc765d6e8f9403",
+		"token":      "20f9d57bb7311b68968128ae1bf85671",
 		"gameCode":   "ragnarok5x20",
 		"clientType": "web",
 		"platform":   1,
@@ -41,15 +41,16 @@ func (this *Work) EnterGame() {
 	// >4. userID - int 玩家編號
 	// >5. balance_ci - int 帶入金額
 	data := map[string]interface{}{
-		"platformID": 1,
-		"lobbyID":    1,
-		"gameID":     1,
-		"userID":     23445,
-		"balance_ci": 0,
+		"gameID": 99,
 	}
-
-	byteData, _ := json.Marshal(data)
-	msg, err := this.Request("Game/HD_EnterGame", byteData)
+	dataStr, _ := json.Marshal(data)
+	body := map[string]interface{}{
+		"sn":       "",
+		"isEncode": false,
+		"data":     string(dataStr),
+	}
+	bodyByte, _ := json.Marshal(body)
+	msg, err := this.Request("Game/HD_EnterGame", bodyByte)
 
 	if err != nil {
 		return
@@ -88,7 +89,13 @@ func (this *Work) StartSpin() {
 			"BetMultiple": 1.8,
 			"BetLines":    20,
 		}
-		byteData, err := json.Marshal(data)
+		dataStr, _ := json.Marshal(data)
+		body := map[string]interface{}{
+			"sn":       "",
+			"isEncode": false,
+			"data":     string(dataStr),
+		}
+		byteData, err := json.Marshal(body)
 		msg, err := this.Request("Game/HD_Spin", byteData)
 
 		if err != nil {
@@ -106,6 +113,7 @@ func (this *Work) SpinDemo() {
 		"BetLines":    20,
 		"NGDramaNo":   25,
 		"BGDramaNo":   -1,
+		"IsFreeGame":  false,
 	}
 	dataStr, _ := json.Marshal(data)
 	body := map[string]interface{}{

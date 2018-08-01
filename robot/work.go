@@ -63,8 +63,8 @@ func (this *Work) UnmarshalResult(payload []byte) map[string]interface{} {
 func (this *Work) Init(t task.Task) {
 	this.Login()
 	this.EnterGame()
-	this.Spin()
-	//this.SpinDemo()
+	//this.Spin()
+	this.SpinDemo()
 }
 
 func (this *Work) Close(t task.Task) {
