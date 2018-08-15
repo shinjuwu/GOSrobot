@@ -1,8 +1,10 @@
 package robot
 
 import (
+	"GOSrobot/tool"
 	"encoding/json"
 	"fmt"
+	"math/rand"
 	"time"
 )
 
@@ -13,17 +15,20 @@ func (this *Work) Login() {
 	// 	"clientType":string , //遊玩平台(web,android..)
 	// 	"platformID":  int //登入平台(1:帳密 2:第三方平台)
 	// 	}
+
 	data := map[string]interface{}{
-		"token":      "20f9d57bb7311b68968128ae1bf85671",
+		"token":      "5bfcde0a151b37b9480a0b23c83ae249",
 		"gameCode":   "ragnarok5x20",
 		"clientType": "web",
 		"platform":   1,
 	}
 	dataStr, _ := json.Marshal(data)
+	aesData, _ := tool.MsgEncrypt(string(dataStr))
+	fmt.Println(aesData)
 	body := map[string]interface{}{
 		"sn":       "",
 		"isEncode": false,
-		"data":     string(dataStr),
+		"data":     aesData,
 	}
 	bodyByte, _ := json.Marshal(body)
 	msg, err := this.Request("Login/HD_Login", bodyByte)
@@ -31,7 +36,8 @@ func (this *Work) Login() {
 	if err != nil {
 		return
 	}
-	fmt.Println(msg.Topic(), string(msg.Payload()))
+	res, _ := tool.MsgDecrypt(string(msg.Payload()))
+	fmt.Println(msg.Topic(), res)
 }
 
 func (this *Work) EnterGame() {
@@ -44,10 +50,11 @@ func (this *Work) EnterGame() {
 		"gameID": 99,
 	}
 	dataStr, _ := json.Marshal(data)
+	aesData, _ := tool.MsgEncrypt(string(dataStr))
 	body := map[string]interface{}{
 		"sn":       "",
 		"isEncode": false,
-		"data":     string(dataStr),
+		"data":     aesData,
 	}
 	bodyByte, _ := json.Marshal(body)
 	msg, err := this.Request("Game/HD_EnterGame", bodyByte)
@@ -55,7 +62,8 @@ func (this *Work) EnterGame() {
 	if err != nil {
 		return
 	}
-	fmt.Println(msg.Topic(), string(msg.Payload()))
+	res, _ := tool.MsgDecrypt(string(msg.Payload()))
+	fmt.Println(msg.Topic(), res)
 }
 
 func (this *Work) Spin() {
@@ -63,13 +71,15 @@ func (this *Work) Spin() {
 	// >2. BetLines: int  壓注線
 	data := map[string]interface{}{
 		"BetMultiple": 1.8,
+		"BetKey":      5,
 		"BetLines":    20,
 	}
 	dataStr, _ := json.Marshal(data)
+	aesData, _ := tool.MsgEncrypt(string(dataStr))
 	body := map[string]interface{}{
 		"sn":       "",
 		"isEncode": false,
-		"data":     string(dataStr),
+		"data":     aesData,
 	}
 	byteData, err := json.Marshal(body)
 	msg, err := this.Request("Game/HD_Spin", byteData)
@@ -77,23 +87,27 @@ func (this *Work) Spin() {
 	if err != nil {
 		return
 	}
-	fmt.Println(msg.Topic(), string(msg.Payload()))
+	res, _ := tool.MsgDecrypt(string(msg.Payload()))
+	fmt.Println(msg.Topic(), res)
 	this.StartSpin()
 }
 
 func (this *Work) StartSpin() {
-	ticker := time.NewTicker(2 * time.Second)
+	ticker := time.NewTicker(1 * time.Second)
 	for _ = range ticker.C {
 		fmt.Println(time.Now())
+		betKey := rand.Intn(9)
 		data := map[string]interface{}{
 			"BetMultiple": 1.8,
 			"BetLines":    20,
+			"BetKey":      betKey,
 		}
 		dataStr, _ := json.Marshal(data)
+		aesData, _ := tool.MsgEncrypt(string(dataStr))
 		body := map[string]interface{}{
 			"sn":       "",
 			"isEncode": false,
-			"data":     string(dataStr),
+			"data":     aesData,
 		}
 		byteData, err := json.Marshal(body)
 		msg, err := this.Request("Game/HD_Spin", byteData)
@@ -101,33 +115,38 @@ func (this *Work) StartSpin() {
 		if err != nil {
 			return
 		}
-		fmt.Println(msg.Topic(), string(msg.Payload()))
+		res, _ := tool.MsgDecrypt(string(msg.Payload()))
+		fmt.Println(msg.Topic(), res)
 	}
 }
 
 func (this *Work) SpinDemo() {
 	// 	>1. BetMultiple  int  壓注倍率
 	// >2. BetLines: int  壓注線
+	betKey := rand.Intn(9)
 	data := map[string]interface{}{
 		"BetMultiple": 1.8,
 		"BetLines":    20,
 		"NGDramaNo":   25,
 		"BGDramaNo":   -1,
-		"IsFreeGame":  false,
+		"IsFreeGame":  true,
+		"BetKey":      betKey,
 	}
 	dataStr, _ := json.Marshal(data)
+	aesData, _ := tool.MsgEncrypt(string(dataStr))
 	body := map[string]interface{}{
 		"sn":       "",
 		"isEncode": false,
-		"data":     string(dataStr),
+		"data":     aesData,
 	}
 
-	byteData, err := json.Marshal(body)
+	byteData, _ := json.Marshal(body)
 	msg, err := this.Request("Game/HD_SpinDemo", byteData)
 
 	if err != nil {
 		return
 	}
-	fmt.Println(msg.Topic(), string(msg.Payload()))
+	res, _ := tool.MsgDecrypt(string(msg.Payload()))
+	fmt.Println(msg.Topic(), res)
 	//this.StartSpin()
 }
