@@ -129,7 +129,7 @@ func (this *Work) SpinDemo() {
 		"BetLines":    20,
 		"NGDramaNo":   25,
 		"BGDramaNo":   -1,
-		"IsFreeGame":  true,
+		"IsFreeGame":  false,
 		"BetKey":      betKey,
 	}
 	dataStr, _ := json.Marshal(data)
