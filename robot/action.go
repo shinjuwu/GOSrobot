@@ -1,6 +1,7 @@
 package robot
 
 import (
+	"GOSrobot/lobbyservice"
 	"GOSrobot/tool"
 	"encoding/json"
 	"fmt"
@@ -9,18 +10,20 @@ import (
 )
 
 func (this *Work) Login() {
-	// "data" : {
-	// 	"token": string , //server token
-	// 	"gameCode": string , //遊戲id
-	// 	"clientType":string , //遊玩平台(web,android..)
-	// 	"platformID":  int //登入平台(1:帳密 2:第三方平台)
-	// 	}
-
+	lobbyservice.LSurl = "http://192.168.2.131:30001/LoadBalance"
+	ipGetResp, _ := lobbyservice.SendIPGet()
+	ipGetInfo := ipGetResp.Data.(map[string]interface{})
+	serverID := int(ipGetInfo["serverId"].(float64))
+	gameTicket := ipGetInfo["gameTicket"].(string)
+	ip := ipGetInfo["ip"].(string)
+	fmt.Println(ip)
 	data := map[string]interface{}{
-		"token":      "5bfcde0a151b37b9480a0b23c83ae249",
+		"token":      "a2d7e10e4057ff73132ee0defc7b15d0",
 		"gameCode":   "ragnarok5x20",
 		"clientType": "web",
-		"platform":   1,
+		"platformID": 2,
+		"gameTicket": gameTicket,
+		"serverID":   serverID,
 	}
 	dataStr, _ := json.Marshal(data)
 	aesData, _ := tool.MsgEncrypt(string(dataStr))
@@ -73,6 +76,7 @@ func (this *Work) Spin() {
 		"BetMultiple": 1.8,
 		"BetKey":      5,
 		"BetLines":    20,
+		"Choose":      1,
 	}
 	dataStr, _ := json.Marshal(data)
 	aesData, _ := tool.MsgEncrypt(string(dataStr))
@@ -89,7 +93,7 @@ func (this *Work) Spin() {
 	}
 	res, _ := tool.MsgDecrypt(string(msg.Payload()))
 	fmt.Println(msg.Topic(), res)
-	this.StartSpin()
+	//this.StartSpin()
 }
 
 func (this *Work) StartSpin() {

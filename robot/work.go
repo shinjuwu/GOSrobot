@@ -24,6 +24,7 @@ func NewWork(maanger *Manager) *Work {
 	//TODO:Initialize game data
 	//
 	//TODO:改成外部設定ip
+	//opts := this.GetDefaultOptions("ws://192.168.2.131:10005")
 	opts := this.GetDefaultOptions("ws://127.0.0.1:3653")
 	opts.SetConnectionLostHandler(func(client MQTT.Client, err error) {
 		fmt.Println("ConnectionLost", err.Error())
