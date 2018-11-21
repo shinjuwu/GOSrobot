@@ -13,19 +13,25 @@ import (
 	"github.com/liangdas/armyant/work"
 )
 
+var Index int
+
 type Work struct {
 	work.MqttWork
-	manager *Manager
+	manager  *Manager
+	account  string
+	QPS      int
+	closeSig bool
 }
 
 func NewWork(maanger *Manager) *Work {
 	this := new(Work)
 	this.manager = maanger
 	//TODO:Initialize game data
-	//
+	this.InitialGameData()
 	//TODO:改成外部設定ip
+	//opts := this.GetDefaultOptions("ws://47.75.49.59:10005")
+	opts := this.GetDefaultOptions("ws://127.0.0.1:10005")
 	//opts := this.GetDefaultOptions("ws://192.168.2.131:10005")
-	opts := this.GetDefaultOptions("ws://127.0.0.1:3653")
 	opts.SetConnectionLostHandler(func(client MQTT.Client, err error) {
 		fmt.Println("ConnectionLost", err.Error())
 	})
@@ -63,15 +69,15 @@ func (this *Work) UnmarshalResult(payload []byte) map[string]interface{} {
 
 func (this *Work) Init(t task.Task) {
 	this.Login()
-	this.EnterGame()
-	this.Spin()
-	//this.SpinDemo()
+
+	// this.QPS = 1000 //每一个并发平均每秒请求次数(限流)
+	// this.closeSig = false
 }
 
 func (this *Work) Close(t task.Task) {
-
+	this.closeSig = true
 }
 
 func (this *Work) RunWorker(t task.Task) {
-
+	this.EnterGame()
 }

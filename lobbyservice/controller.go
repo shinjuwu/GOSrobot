@@ -11,7 +11,7 @@ import (
 
 var LSurl string
 
-func SendIPGet() (*LSRespLayer, error) {
+func SendIPGet(account string) (*LSRespLayer, error) {
 	cmd := "loadBalanceHttpIpGet"
 	ipGetData := LSIPGet{
 		PlatformID:    2,
@@ -19,8 +19,8 @@ func SendIPGet() (*LSRespLayer, error) {
 		AgentID:       0,
 		GameID:        2010,
 		GameCode:      "ragnarok5x20",
-		Token:         "a2d7e10e4057ff73132ee0defc7b15d0",
-		Account:       "",
+		Token:         "0d15c68a91651c5c0ea5cbfe5a63e570",
+		Account:       account,
 		Password:      "",
 		ClientType:    "web",
 		ClientVersion: "foo",

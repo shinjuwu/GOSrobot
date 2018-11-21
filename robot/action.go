@@ -6,41 +6,51 @@ import (
 	"encoding/json"
 	"fmt"
 	"math/rand"
+	"strconv"
 	"time"
 )
 
+func (this *Work) InitialGameData() {
+	Index++
+	this.account = "test" + strconv.Itoa(Index)
+}
+
 func (this *Work) Login() {
 	lobbyservice.LSurl = "http://192.168.2.131:30001/LoadBalance"
-	ipGetResp, _ := lobbyservice.SendIPGet()
+	ipGetResp, _ := lobbyservice.SendIPGet("")
 	ipGetInfo := ipGetResp.Data.(map[string]interface{})
 	serverID := int(ipGetInfo["serverId"].(float64))
 	gameTicket := ipGetInfo["gameTicket"].(string)
 	ip := ipGetInfo["ip"].(string)
 	fmt.Println(ip)
 	data := map[string]interface{}{
-		"token":      "a2d7e10e4057ff73132ee0defc7b15d0",
+		"token":      "0d15c68a91651c5c0ea5cbfe5a63e570",
 		"gameCode":   "ragnarok5x20",
 		"clientType": "web",
 		"platformID": 2,
 		"gameTicket": gameTicket,
 		"serverID":   serverID,
+		"account":    "",
+		"password":   "",
 	}
 	dataStr, _ := json.Marshal(data)
-	aesData, _ := tool.MsgEncrypt(string(dataStr))
-	fmt.Println(aesData)
+	// aesData, _ := tool.MsgEncrypt(string(dataStr))
+	// fmt.Println(aesData)
 	body := map[string]interface{}{
 		"sn":       "",
 		"isEncode": false,
-		"data":     aesData,
+		"data":     string(dataStr),
 	}
 	bodyByte, _ := json.Marshal(body)
 	msg, err := this.Request("Login/HD_Login", bodyByte)
-
 	if err != nil {
 		return
 	}
-	res, _ := tool.MsgDecrypt(string(msg.Payload()))
-	fmt.Println(msg.Topic(), res)
+	//res, _ := tool.MsgDecrypt(string(msg.Payload()))
+	fmt.Println(msg.Topic(), string(msg.Payload()))
+	//this.closeSig = true
+	// time.Sleep(1 * time.Second)
+	// this.EnterGame()
 }
 
 func (this *Work) EnterGame() {
@@ -50,14 +60,14 @@ func (this *Work) EnterGame() {
 	// >4. userID - int 玩家編號
 	// >5. balance_ci - int 帶入金額
 	data := map[string]interface{}{
-		"gameID": 99,
+		"gameID": 2010,
 	}
 	dataStr, _ := json.Marshal(data)
-	aesData, _ := tool.MsgEncrypt(string(dataStr))
+	//aesData, _ := tool.MsgEncrypt(string(dataStr))
 	body := map[string]interface{}{
 		"sn":       "",
 		"isEncode": false,
-		"data":     aesData,
+		"data":     string(dataStr),
 	}
 	bodyByte, _ := json.Marshal(body)
 	msg, err := this.Request("Game/HD_EnterGame", bodyByte)
@@ -65,8 +75,11 @@ func (this *Work) EnterGame() {
 	if err != nil {
 		return
 	}
-	res, _ := tool.MsgDecrypt(string(msg.Payload()))
-	fmt.Println(msg.Topic(), res)
+	//res, _ := tool.MsgDecrypt(string(msg.Payload()))
+	fmt.Println(msg.Topic(), string(msg.Payload()))
+
+	time.Sleep(4 * time.Second)
+	this.Spin()
 }
 
 func (this *Work) Spin() {
@@ -74,44 +87,46 @@ func (this *Work) Spin() {
 	// >2. BetLines: int  壓注線
 	data := map[string]interface{}{
 		"BetMultiple": 1.8,
-		"BetKey":      5,
+		"BetKey":      1,
 		"BetLines":    20,
 		"Choose":      1,
+		"MonsterID":   1,
 	}
 	dataStr, _ := json.Marshal(data)
-	aesData, _ := tool.MsgEncrypt(string(dataStr))
+	//aesData, _ := tool.MsgEncrypt(string(dataStr))
 	body := map[string]interface{}{
 		"sn":       "",
 		"isEncode": false,
-		"data":     aesData,
+		"data":     string(dataStr),
 	}
 	byteData, err := json.Marshal(body)
 	msg, err := this.Request("Game/HD_Spin", byteData)
-
 	if err != nil {
 		return
 	}
-	res, _ := tool.MsgDecrypt(string(msg.Payload()))
-	fmt.Println(msg.Topic(), res)
-	//this.StartSpin()
+	//res, _ := tool.MsgDecrypt(string(msg.Payload()))
+	fmt.Println(msg.Topic(), string(msg.Payload()))
+	time.Sleep(4 * time.Second)
+	this.StartSpin()
 }
 
 func (this *Work) StartSpin() {
-	ticker := time.NewTicker(1 * time.Second)
+	ticker := time.NewTicker(3 * time.Second)
 	for _ = range ticker.C {
 		fmt.Println(time.Now())
-		betKey := rand.Intn(9)
+
 		data := map[string]interface{}{
 			"BetMultiple": 1.8,
+			"BetKey":      1,
 			"BetLines":    20,
-			"BetKey":      betKey,
+			"Choose":      1,
 		}
 		dataStr, _ := json.Marshal(data)
-		aesData, _ := tool.MsgEncrypt(string(dataStr))
+		//aesData, _ := tool.MsgEncrypt(string(dataStr))
 		body := map[string]interface{}{
 			"sn":       "",
 			"isEncode": false,
-			"data":     aesData,
+			"data":     string(dataStr),
 		}
 		byteData, err := json.Marshal(body)
 		msg, err := this.Request("Game/HD_Spin", byteData)
@@ -119,8 +134,8 @@ func (this *Work) StartSpin() {
 		if err != nil {
 			return
 		}
-		res, _ := tool.MsgDecrypt(string(msg.Payload()))
-		fmt.Println(msg.Topic(), res)
+		//res, _ := tool.MsgDecrypt(string(msg.Payload()))
+		fmt.Println(msg.Topic(), string(msg.Payload()))
 	}
 }
 

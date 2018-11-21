@@ -14,9 +14,10 @@
 package task
 
 import (
-	"github.com/liangdas/armyant/utils"
 	"sync"
 	"time"
+
+	"github.com/liangdas/armyant/utils"
 )
 
 type LoopTask struct {
@@ -56,6 +57,7 @@ func (b *LoopTask) Wait() {
 func (b *LoopTask) runWorkers(manager WorkManager) {
 	b.wg.Add(b.C)
 	for i := 0; i < b.C; i++ {
+		time.Sleep(1000 * time.Millisecond)
 		task := manager.CreateWork()
 		b.q.Push(task)
 		go func() {
