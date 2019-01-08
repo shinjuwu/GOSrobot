@@ -30,7 +30,7 @@ func NewWork(maanger *Manager) *Work {
 	this.InitialGameData()
 	//TODO:改成外部設定ip
 	//opts := this.GetDefaultOptions("ws://47.75.49.59:10005")
-	opts := this.GetDefaultOptions("ws://127.0.0.1:10005")
+	opts := this.GetDefaultOptions("ws://127.0.0.1:10011")
 	//opts := this.GetDefaultOptions("ws://192.168.2.131:10005")
 	opts.SetConnectionLostHandler(func(client MQTT.Client, err error) {
 		fmt.Println("ConnectionLost", err.Error())
@@ -57,7 +57,18 @@ func NewWork(maanger *Manager) *Work {
 	}
 
 	//接到服務器端的訊息
-	//this.On()
+	this.On("Gamepoker/Opening", func(client MQTT.Client, msg MQTT.Message) {
+		fmt.Println(msg.Topic(), string(msg.Payload()))
+	})
+	this.On("Gamepoker/Idle", func(client MQTT.Client, msg MQTT.Message) {
+		fmt.Println(msg.Topic(), string(msg.Payload()))
+	})
+	this.On("Gamepoker/Betting", func(client MQTT.Client, msg MQTT.Message) {
+		fmt.Println(msg.Topic(), string(msg.Payload()))
+	})
+	this.On("Gamepoker/Settlement", func(client MQTT.Client, msg MQTT.Message) {
+		fmt.Println(msg.Topic(), string(msg.Payload()))
+	})
 	return this
 }
 
@@ -79,5 +90,5 @@ func (this *Work) Close(t task.Task) {
 }
 
 func (this *Work) RunWorker(t task.Task) {
-	this.EnterGame()
+	//this.EnterGame()
 }

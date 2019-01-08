@@ -6,7 +6,7 @@ import (
 )
 
 func TestSendIPGet(t *testing.T) {
-	LSurl = "http://192.168.2.131:30001/LoadBalance"
+	LSurl = "http://127.0.0.1:8888/LoadBalance"
 	tests := []struct {
 		name string
 	}{
