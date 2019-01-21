@@ -16,8 +16,9 @@ func (this *Work) InitialGameData() {
 
 func (this *Work) Login() {
 	data := map[string]interface{}{
-		"token":      "54f5803da10ba4e5238bf229176fe1aa",
+		"token":      "68bfbff1fzuv7eqgeepzjaju",
 		"gameCode":   "CaiShen",
+		"gameID":     2012,
 		"clientType": "web",
 		"platformID": 2,
 		"account":    "",
