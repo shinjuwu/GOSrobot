@@ -16,13 +16,14 @@ func (this *Work) InitialGameData() {
 
 func (this *Work) Login() {
 	data := map[string]interface{}{
-		"token":      "68bfbff1fzuv7eqgeepzjaju",
-		"gameCode":   "CaiShen",
-		"gameID":     2012,
+		//"token":      "68bfbff1fzuv7eqgeepzjaju",
+		"token":      "6a95a0489zi5mcem7h30z22o2m",
+		"gameCode":   "",
+		"gameID":     2005,
 		"clientType": "web",
 		"platformID": 2,
-		"account":    "",
-		"password":   "",
+		"account":    "123",
+		"password":   "321",
 	}
 	dataStr, _ := json.Marshal(data)
 	// aesData, _ := tool.MsgEncrypt(string(dataStr))
@@ -220,7 +221,7 @@ func (this *Work) Enter() {
 	}
 
 	byteData, _ := json.Marshal(body)
-	msg, err := this.Request("Gamepoker/HD_Enter", byteData)
+	msg, err := this.Request("Ladder/HD_Enter", byteData)
 
 	if err != nil {
 		return
@@ -230,12 +231,19 @@ func (this *Work) Enter() {
 
 func (this *Work) Stake() {
 
+	// data := map[string]interface{}{
+	// 	"SpadeBets":   10,
+	// 	"HeartBets":   0,
+	// 	"DiamondBets": 0,
+	// 	"ClubBets":    0,
+	// 	"JokerBets":   10,
+	// }
 	data := map[string]interface{}{
-		"SpadeBets":   100,
-		"HeartBets":   0,
-		"DiamondBets": 0,
-		"ClubBets":    0,
-		"JokerBets":   0,
+		"key":      70,
+		"paymode":  1,
+		"number":   "2104",
+		"spbet":    100,
+		"bet_list": [15]int64{},
 	}
 	dataStr, _ := json.Marshal(data)
 	//aesData, _ := tool.MsgEncrypt(string(dataStr))
@@ -245,7 +253,7 @@ func (this *Work) Stake() {
 		"data":     string(dataStr),
 	}
 	byteData, err := json.Marshal(body)
-	msg, err := this.Request("Gamepoker/HD_Stake", byteData)
+	msg, err := this.Request("Ladder/HD_Stake", byteData)
 	if err != nil {
 		return
 	}
