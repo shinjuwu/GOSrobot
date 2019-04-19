@@ -17,17 +17,16 @@ func (this *Work) InitialGameData() {
 func (this *Work) Login() {
 	data := map[string]interface{}{
 		//"token":      "68bfbff1fzuv7eqgeepzjaju",
-		"token":      "6a95a0489zi5mcem7h30z22o2m",
+		//"token":      "6a95a0489zi5mcem7h30z22o2m",
+		"token":      "61f3fee8czi5maoa75jkz22o2k",
 		"gameCode":   "",
-		"gameID":     2005,
+		"gameID":     2010,
 		"clientType": "web",
 		"platformID": 2,
-		"account":    "123",
-		"password":   "321",
+		"account":    "",
+		"password":   "",
 	}
 	dataStr, _ := json.Marshal(data)
-	// aesData, _ := tool.MsgEncrypt(string(dataStr))
-	// fmt.Println(aesData)
 	body := map[string]interface{}{
 		"sn":       "",
 		"isEncode": false,
@@ -38,13 +37,14 @@ func (this *Work) Login() {
 	if err != nil {
 		return
 	}
-	//res, _ := tool.MsgDecrypt(string(msg.Payload()))
+
 	fmt.Println(msg.Topic(), string(msg.Payload()))
 	//this.closeSig = true
 	// time.Sleep(1 * time.Second)
-	//this.EnterGame()
-	this.Enter()
-	this.Stake()
+	this.EnterGame()
+	//this.Enter()
+	//this.Stake()
+	//this.getOpenHistory()
 }
 
 func (this *Work) EnterGame() {
@@ -54,7 +54,7 @@ func (this *Work) EnterGame() {
 	// >4. userID - int 玩家編號
 	// >5. balance_ci - int 帶入金額
 	data := map[string]interface{}{
-		"gameID": 2010,
+		"gameID": 2011,
 	}
 	dataStr, _ := json.Marshal(data)
 	//aesData, _ := tool.MsgEncrypt(string(dataStr))
@@ -73,9 +73,9 @@ func (this *Work) EnterGame() {
 	fmt.Println(msg.Topic(), string(msg.Payload()))
 
 	//time.Sleep(4 * time.Second)
-	//this.Spin()
+	this.Spin()
 	//this.Lottery()
-	this.LotteryDemo()
+	//this.LotteryDemo()
 }
 
 func (this *Work) Spin() {
@@ -85,7 +85,7 @@ func (this *Work) Spin() {
 		"BetMultiple": 1.8,
 		"BetKey":      1,
 		"BetLines":    20,
-		"Choose":      1,
+		"Choose":      10,
 		"MonsterID":   1,
 	}
 	dataStr, _ := json.Marshal(data)
@@ -102,8 +102,8 @@ func (this *Work) Spin() {
 	}
 	//res, _ := tool.MsgDecrypt(string(msg.Payload()))
 	fmt.Println(msg.Topic(), string(msg.Payload()))
-	time.Sleep(4 * time.Second)
-	this.StartSpin()
+	// time.Sleep(4 * time.Second)
+	//this.StartSpin()
 }
 
 func (this *Work) Lottery() {
@@ -137,7 +137,7 @@ func (this *Work) StartSpin() {
 			"BetMultiple": 1.8,
 			"BetKey":      1,
 			"BetLines":    20,
-			"Choose":      1,
+			"Choose":      10,
 		}
 		dataStr, _ := json.Marshal(data)
 		//aesData, _ := tool.MsgEncrypt(string(dataStr))
@@ -239,9 +239,9 @@ func (this *Work) Stake() {
 	// 	"JokerBets":   10,
 	// }
 	data := map[string]interface{}{
-		"key":      70,
-		"paymode":  1,
-		"number":   "2104",
+		"key":      62,
+		"paymode":  2,
+		"number":   "2202",
 		"spbet":    100,
 		"bet_list": [15]int64{},
 	}
@@ -254,6 +254,20 @@ func (this *Work) Stake() {
 	}
 	byteData, err := json.Marshal(body)
 	msg, err := this.Request("Ladder/HD_Stake", byteData)
+	if err != nil {
+		return
+	}
+	fmt.Println(msg.Topic(), string(msg.Payload()))
+}
+
+func (this *Work) getOpenHistory() {
+	body := map[string]interface{}{
+		"sn":       "",
+		"isEncode": false,
+		"data":     "",
+	}
+	byteData, _ := json.Marshal(body)
+	msg, err := this.Request("Ladder/HD_GetOpenHistory", byteData)
 	if err != nil {
 		return
 	}
