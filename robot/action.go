@@ -1,10 +1,8 @@
 package robot
 
 import (
-	"GOSrobot/tool"
 	"encoding/json"
 	"fmt"
-	"math/rand"
 	"strconv"
 	"time"
 )
@@ -16,15 +14,9 @@ func (this *Work) InitialGameData() {
 
 func (this *Work) Login() {
 	data := map[string]interface{}{
-		//"token":      "68bfbff1fzuv7eqgeepzjaju",
-		//"token":      "6a95a0489zi5mcem7h30z22o2m",
-		"token":      "61f3fee8czi5maoa75jkz22o2k",
-		"gameCode":   "",
-		"gameID":     2010,
-		"clientType": "web",
-		"platformID": 2,
-		"account":    "",
-		"password":   "",
+		"token":    "6c9ac1a24z938a55qj8hz1f19q", //pk02
+		"gameCode": "STSAM",
+		"gameID":   2014,
 	}
 	dataStr, _ := json.Marshal(data)
 	body := map[string]interface{}{
@@ -54,7 +46,7 @@ func (this *Work) EnterGame() {
 	// >4. userID - int 玩家編號
 	// >5. balance_ci - int 帶入金額
 	data := map[string]interface{}{
-		"gameID": 2011,
+		"gameID": 2013,
 	}
 	dataStr, _ := json.Marshal(data)
 	//aesData, _ := tool.MsgEncrypt(string(dataStr))
@@ -64,7 +56,8 @@ func (this *Work) EnterGame() {
 		"data":     string(dataStr),
 	}
 	bodyByte, _ := json.Marshal(body)
-	msg, err := this.Request("Game/HD_EnterGame", bodyByte)
+	msg, err := this.Request("Sanheap/HD_EnterGame", bodyByte)
+	//msg, err := this.Request("Game/HD_EnterGame", bodyByte)
 
 	if err != nil {
 		return
@@ -76,6 +69,7 @@ func (this *Work) EnterGame() {
 	this.Spin()
 	//this.Lottery()
 	//this.LotteryDemo()
+	//this.SpinDemo()
 }
 
 func (this *Work) Spin() {
@@ -96,7 +90,8 @@ func (this *Work) Spin() {
 		"data":     string(dataStr),
 	}
 	byteData, err := json.Marshal(body)
-	msg, err := this.Request("Game/HD_Spin", byteData)
+	msg, err := this.Request("Sanheap/HD_Spin", byteData)
+	//msg, err := this.Request("Game/HD_Spin", byteData)
 	if err != nil {
 		return
 	}
@@ -160,31 +155,38 @@ func (this *Work) StartSpin() {
 func (this *Work) SpinDemo() {
 	// 	>1. BetMultiple  int  壓注倍率
 	// >2. BetLines: int  壓注線
-	betKey := rand.Intn(9)
+	//betKey := rand.Intn(9)
+	// data := map[string]interface{}{
+	// 	"BetMultiple": 1.8,
+	// 	"BetLines":    20,
+	// 	"NGDramaNo":   25,
+	// 	"BGDramaNo":   -1,
+	// 	"IsFreeGame":  false,
+	// 	"BetKey":      betKey,
+	// }
 	data := map[string]interface{}{
-		"BetMultiple": 1.8,
-		"BetLines":    20,
-		"NGDramaNo":   25,
-		"BGDramaNo":   -1,
-		"IsFreeGame":  false,
-		"BetKey":      betKey,
+		"BetLines": 10,
+		"DramaNO":  1,
+		"OpenW":    true,
+		"BetKey":   1,
 	}
 	dataStr, _ := json.Marshal(data)
-	aesData, _ := tool.MsgEncrypt(string(dataStr))
+	//aesData, _ := tool.MsgEncrypt(string(dataStr))
 	body := map[string]interface{}{
 		"sn":       "",
 		"isEncode": false,
-		"data":     aesData,
+		"data":     string(dataStr),
 	}
 
 	byteData, _ := json.Marshal(body)
-	msg, err := this.Request("Game/HD_SpinDemo", byteData)
+	msg, err := this.Request("Sanheap/HD_SpinDemo", byteData)
 
 	if err != nil {
 		return
 	}
-	res, _ := tool.MsgDecrypt(string(msg.Payload()))
-	fmt.Println(msg.Topic(), res)
+	fmt.Println(msg.Topic(), string(msg.Payload()))
+	//res, _ := tool.MsgDecrypt(string(msg.Payload()))
+	//fmt.Println(msg.Topic(), res)
 	//this.StartSpin()
 }
 
