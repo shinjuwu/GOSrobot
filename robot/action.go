@@ -14,9 +14,9 @@ func (this *Work) InitialGameData() {
 
 func (this *Work) Login() {
 	data := map[string]interface{}{
-		"token":    "6c9ac1a24z938a55qj8hz1f19q", //pk02
-		"gameCode": "STSAM",
-		"gameID":   2014,
+		"token":    "6cc49274dz1v8jtn1lllzp895", //pk02
+		"gameCode": "gp",
+		"gameID":   2012,
 	}
 	dataStr, _ := json.Marshal(data)
 	body := map[string]interface{}{
@@ -33,8 +33,8 @@ func (this *Work) Login() {
 	fmt.Println(msg.Topic(), string(msg.Payload()))
 	//this.closeSig = true
 	// time.Sleep(1 * time.Second)
-	this.EnterGame()
-	//this.Enter()
+	//this.EnterGame()
+	this.Enter()
 	//this.Stake()
 	//this.getOpenHistory()
 }
@@ -56,7 +56,8 @@ func (this *Work) EnterGame() {
 		"data":     string(dataStr),
 	}
 	bodyByte, _ := json.Marshal(body)
-	msg, err := this.Request("Sanheap/HD_EnterGame", bodyByte)
+	msg, err := this.Request("Simpleslot/HD_EnterGame", bodyByte)
+	//msg, err := this.Request("Sanheap/HD_EnterGame", bodyByte)
 	//msg, err := this.Request("Game/HD_EnterGame", bodyByte)
 
 	if err != nil {
@@ -90,7 +91,9 @@ func (this *Work) Spin() {
 		"data":     string(dataStr),
 	}
 	byteData, err := json.Marshal(body)
-	msg, err := this.Request("Sanheap/HD_Spin", byteData)
+	msg, err := this.Request("Simpleslot/HD_Spin", byteData)
+	//msg, err := this.Request("Sanheap/HD_Spin", byteData)
+	//msg, err := this.Request("Infinitystone/HD_Spin", byteData)
 	//msg, err := this.Request("Game/HD_Spin", byteData)
 	if err != nil {
 		return
@@ -179,7 +182,8 @@ func (this *Work) SpinDemo() {
 	}
 
 	byteData, _ := json.Marshal(body)
-	msg, err := this.Request("Sanheap/HD_SpinDemo", byteData)
+	msg, err := this.Request("Simpleslot/HD_SpinDemo", byteData)
+	//msg, err := this.Request("Sanheap/HD_SpinDemo", byteData)
 
 	if err != nil {
 		return
@@ -223,30 +227,31 @@ func (this *Work) Enter() {
 	}
 
 	byteData, _ := json.Marshal(body)
-	msg, err := this.Request("Ladder/HD_Enter", byteData)
+	msg, err := this.Request("Gamepoker/HD_Enter", byteData)
 
 	if err != nil {
 		return
 	}
 	fmt.Println(msg.Topic(), string(msg.Payload()))
+	this.Stake()
 }
 
 func (this *Work) Stake() {
 
-	// data := map[string]interface{}{
-	// 	"SpadeBets":   10,
-	// 	"HeartBets":   0,
-	// 	"DiamondBets": 0,
-	// 	"ClubBets":    0,
-	// 	"JokerBets":   10,
-	// }
 	data := map[string]interface{}{
-		"key":      62,
-		"paymode":  2,
-		"number":   "2202",
-		"spbet":    100,
-		"bet_list": [15]int64{},
+		"SpadeBets":   10,
+		"HeartBets":   0,
+		"DiamondBets": 0,
+		"ClubBets":    0,
+		"JokerBets":   10,
 	}
+	// data := map[string]interface{}{
+	// 	"key":      62,
+	// 	"paymode":  2,
+	// 	"number":   "2202",
+	// 	"spbet":    []int{100, 0},
+	// 	"bet_list": [15]int64{},
+	// }
 	dataStr, _ := json.Marshal(data)
 	//aesData, _ := tool.MsgEncrypt(string(dataStr))
 	body := map[string]interface{}{
@@ -255,7 +260,7 @@ func (this *Work) Stake() {
 		"data":     string(dataStr),
 	}
 	byteData, err := json.Marshal(body)
-	msg, err := this.Request("Ladder/HD_Stake", byteData)
+	msg, err := this.Request("Gamepoker/HD_Stake", byteData)
 	if err != nil {
 		return
 	}
