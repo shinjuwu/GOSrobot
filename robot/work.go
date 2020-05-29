@@ -32,6 +32,9 @@ func NewWork(maanger *Manager) *Work {
 	//opts := this.GetDefaultOptions("ws://35.221.162.196:10011")
 	opts := this.GetDefaultOptions("ws://127.0.0.1:10011")
 	//opts := this.GetDefaultOptions("ws://192.168.2.131:10005")
+	//opts := this.GetDefaultOptions("ws://18.179.219.16:10011")
+	//opts := this.GetDefaultOptions("ws://wmslot-gs.apolloegame.net/")
+	//opts := this.GetDefaultOptions("ws://35.189.179.93:10031")
 	opts.SetConnectionLostHandler(func(client MQTT.Client, err error) {
 		fmt.Println("ConnectionLost", err.Error())
 	})
@@ -57,16 +60,28 @@ func NewWork(maanger *Manager) *Work {
 	}
 
 	//接到服務器端的訊息
-	this.On("Gamepoker/Opening", func(client MQTT.Client, msg MQTT.Message) {
+	this.On("Lottery/Opening", func(client MQTT.Client, msg MQTT.Message) {
 		fmt.Println(msg.Topic(), string(msg.Payload()))
 	})
-	this.On("Gamepoker/Idle", func(client MQTT.Client, msg MQTT.Message) {
+	this.On("Lottery/Idle", func(client MQTT.Client, msg MQTT.Message) {
 		fmt.Println(msg.Topic(), string(msg.Payload()))
 	})
-	this.On("Gamepoker/Betting", func(client MQTT.Client, msg MQTT.Message) {
+	this.On("Lottery/Betting", func(client MQTT.Client, msg MQTT.Message) {
 		fmt.Println(msg.Topic(), string(msg.Payload()))
 	})
-	this.On("Gamepoker/Settlement", func(client MQTT.Client, msg MQTT.Message) {
+	this.On("Lottery/Settlement", func(client MQTT.Client, msg MQTT.Message) {
+		fmt.Println(msg.Topic(), string(msg.Payload()))
+	})
+
+	this.On("Lottery/SettlementResult", func(client MQTT.Client, msg MQTT.Message) {
+		fmt.Println(msg.Topic(), string(msg.Payload()))
+	})
+
+	this.On("Lottery/Bingo", func(client MQTT.Client, msg MQTT.Message) {
+		fmt.Println(msg.Topic(), string(msg.Payload()))
+	})
+
+	this.On("Lottery/Target", func(client MQTT.Client, msg MQTT.Message) {
 		fmt.Println(msg.Topic(), string(msg.Payload()))
 	})
 	return this
